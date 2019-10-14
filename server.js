@@ -42,7 +42,7 @@ app.get('/',function(req,res){
 		'Access-Control-Allow-Origin' : '*' // creates access from any orgin
 	});
 	return res.redirect('/public/add_client.html');
-}).listen(80);
+}).listen(process.env.PORT || 5000);
 
 console.log("Server listening at : 3000");
 app.use('/public', express.static(__dirname + '/public'));
