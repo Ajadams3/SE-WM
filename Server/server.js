@@ -42,7 +42,7 @@ app.get('/',function(req,res){
 	res.set({
 		'Access-Control-Allow-Origin' : '*' // creates access from any orgin
 	});
-	return res.redirect('/public/add_client.html');
+	return res.redirect('/public/edit_client.html');
 }).listen(3000);
 
 console.log("Server listening at : 3000");
@@ -78,19 +78,19 @@ app.post('/add_client' , function(req,res){
     var clientId_input = primary_key_generator();
     var companyStatus_input = req.body.toggle;
     var companyStatus = false;
-	
+
     // checking if toggle switch is on or off
     if( companyStatus_input == "on" )
     {
         companyStatus = true;
     }
 
-    else 
+    else
     {
         companyStatus = false;
     }
 
-    // reversing the date for postgreSQL 
+    // reversing the date for postgreSQL
     startDate_input = startDate_input.split("/").reverse().join("-");
 
 const client = new Client({
@@ -130,3 +130,31 @@ addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_i
 	return res.redirect('/public/success.html');
 });
 
+app.get('/ajax_get_clients', function(req, res) {
+
+  client = new Client({
+      user:config.db.user,
+      host:config.db.host,
+      database:config.db.database,
+      password:config.db.password,
+      port:config.db.port,
+      ssl:config.db.ssl
+    })
+
+  client.connect()
+    client.query("SELECT client_id, name, company, email, phone, phone_type, address_one,\
+                        address_two, city, state, zip, county, start_date, company_status\
+                         FROM client_table", function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      var row1 = result.rows.length;
+      console.log(row1);
+
+      res.send(result);
+
+      client.end();
+
+    });
+  });
