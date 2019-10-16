@@ -149,8 +149,8 @@ app.get('/ajax_get_clients', function(req, res) {
         throw err;
       }
 
-      var row1 = result.rows.length;
-      console.log(row1);
+      var size = result.rows.length;
+      console.log(size);
 
       res.send(result);
 
