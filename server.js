@@ -8,6 +8,7 @@ var sequelize = require('sequelize');
 var client = new pg.Client();
 const config = require('./config');
 const { performance } = require('perf_hooks');
+var newTicketID;
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
     extended: true
 }));
@@ -41,10 +42,10 @@ app.get('/',function(req,res){
 	res.set({
 		'Access-Control-Allow-Origin' : '*' // creates access from any orgin
 	});
-	return res.redirect('/public/add_client.html');
+	return res.redirect('public/index.html');
 }).listen(process.env.PORT || 5000);
 
-console.log("Server listening at : 3000");
+console.log("Server listening at : 5000");
 app.use('/public', express.static(__dirname + '/public'));
 
 //To allow the storage of spaces in text fields
@@ -52,73 +53,475 @@ app.use(bodyParser.text({ type: 'text/html' }))
 app.use(bodyParser.text({ type: 'text/xml' }))
 
 function primary_key_generator(){
+    var ret = Math.round(((Math.random()*100000)/25)*Math.sin(3));
+    newTicketID = ret; 
     return (
-      Number(String(Math.random()).slice(2)) + 
-      Date.now() + 
-      Math.round(performance.now())
-    ).toString(36);
+        ret
+        //Number(String(Math.random()).slice(2)) + 
+      //Date.now() + 
+      //Math.round(performance.now())
+    );
 }
 
+    //using Andrew's posting client info as template for posting info, his original is on master
+    // get ticket input working first, then fix up reading gas and trucking companies from table
+app.post('/index' , function(req,res){
 
-    //recieve request from the front end and store it into the database
-app.post('/add_client' , function(req,res){
+    var ticket_id = primary_key_generator();
 
-    var company_input = req.body.company;
-    var clientName_input = req.body.name;
-    var email_input = req.body.email;
-    var phone_input = req.body.phone;
-    var phoneType_input= req.body.phoneType;
-    var addressOne_input = req.body.addressOne;
-    var addressTwo_input = req.body.addressTwo;    
-    var city_input= req.body.city;
-    var state_input = req.body.state;
-    var zip_input = req.body.zip;
-    var county_input = req.body.county;
-    var startDate_input = req.body.startDate;
-    var clientId_input = primary_key_generator();
-    var companyStatus_input = true;
-    var date = "24/09/2018";
-    startDate_input = startDate_input.split("/").reverse().join("-");
-    console.log(startDate_input);
-
-const client = new Client({
-    user:config.db.user,
-    host:config.db.host,
-    database:config.db.database,
-    password:config.db.password,
-    port:config.db.port,
-    ssl:config.db.ssl  
-  })
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
 
   
-client.connect()
+    client.connect()
 
-const insertText = 'INSERT INTO client_table (client_id, name, company, email, phone, phone_type, address_one,\
-                    address_two, city, state, zip, county, start_date, company_status) VALUES ($1, $2, $3, $4, $5, $6,\
-                    $7, $8, $9, $10, $11, $12, $13, $14)'
+    const insertText = 'INSERT INTO ticket_table (ticket_id, gas_company, truck_company, driver_name, truck_number, trailer_number, material_location,\
+                        water_type, water_total, solid_type, solid_total, wet_type, wet_total, ticket_notes, signature, date) VALUES ($1, $2, $3, $4, $5, $6,\
+                        $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)'
             
-client.query(insertText, [clientId_input, clientName_input, company_input, email_input, phone_input, phoneType_input, 
-addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_input, startDate_input, companyStatus_input],(err,res)=>{
+    client.query(insertText, [ticket_id, "", "", "", "", "", "", "", 0, "", 0, "", 0, "", "", "2000-08-08"],(err,res)=>{
 
-    if (err) 
-    {
-        console.log(err);
-        client.end();
-        res.status(400).send(err);
-    }
-    else{
-        console.log(err,res)
-        console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
-       client.end();
-    }
-})
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res)
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
   
 	res.set({
 		'Access-Control-Allow-Origin' : '*'
 	});
-	return res.redirect('/public/success.html');  
+	return res.redirect('/pos1.html');  
+});
 
+app.post('/pos1' , function(req,res){
+
+    var gasCo = req.body.gas;
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect()
+
+    const updateText = 'UPDATE ticket_table SET gas_company = $1 WHERE ticket_id = $2'
+            
+    client.query(updateText, [gasCo, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/pos2.html');  
+});
+
+app.post('/pos2' , function(req,res){
+
+    var truckCo = req.body.truck;
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect()
+
+    const updateText = 'UPDATE ticket_table SET truck_company = $1 WHERE ticket_id = $2'
+            
+    client.query(updateText, [truckCo, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/pos3.html');  
+});
+
+app.post('/pos3' , function(req,res){
+
+    var driver = req.body.text;
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect()
+
+    const updateText = 'UPDATE ticket_table SET driver_name = $1 WHERE ticket_id = $2'
+            
+    client.query(updateText, [driver, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/pos4.html');  
+});
+
+app.post('/pos4' , function(req,res){
+
+    var trucknum = req.body.text;
+    var trailernum = req.body.text2;
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect()
+
+    const updateText = 'UPDATE ticket_table SET truck_number = $1, trailer_number = $2 WHERE ticket_id = $3'
+            
+    client.query(updateText, [trucknum, trailernum, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/pos5.html');  
+});
+
+app.post('/pos5' , function(req,res){
+
+    var loc = req.body.text;
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect()
+
+    const updateText = 'UPDATE ticket_table SET material_location = $1 WHERE ticket_id = $2'
+            
+    client.query(updateText, [loc, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/pos6.html');  
+});
+
+app.post('/pos6' , function(req,res){
+
+    var material = req.body.mat;
+    var material_type = req.body.matType;
+    var material_amount = req.body.matNum;
+    var updateText = '';
+
+    switch(material) {
+        case "Water":
+            updateText = 'UPDATE ticket_table SET water_type = $1, water_total = $2 WHERE ticket_id = $3'
+            break;
+        case "Solids":
+            updateText = 'UPDATE ticket_table SET solid_type = $1, solid_total = $2 WHERE ticket_id = $3'
+            break;
+        case "Wet Solids":
+            updateText = 'UPDATE ticket_table SET wet_type = $1, wet_total = $2 WHERE ticket_id = $3';
+            break;
+    }
+
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect()
+            
+    client.query(updateText, [material_type, material_amount, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/pos7.html');  
+});
+
+app.post('/pos7' , function(req,res){
+
+    var notes = req.body.text;
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect()
+
+    const updateText = 'UPDATE ticket_table SET ticket_notes = $1 WHERE ticket_id = $2'
+            
+    client.query(updateText, [notes, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/pos8.html');  
+});
+
+app.post('/pos8' , function(req,res){
+    var signature = req.body.sig;
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+    var today = year + "-" + month + "-" + day;
+    today = today.split("/").reverse().join("-");
+
+    const client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl  
+    })
+
+  
+    client.connect();
+
+    const updateText = 'UPDATE ticket_table SET signature = $1, date = $2 WHERE ticket_id = $3';
+            
+    client.query(updateText, [signature, today, newTicketID],(err,res)=>{
+
+        if (err)
+        {
+            console.log(err);
+            client.end();
+            res.status(400).send(err);
+        }
+        else{
+            console.log(err,res);
+            console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+            client.end();
+        }
+    })
+  
+	res.set({
+		'Access-Control-Allow-Origin' : '*'
+	});
+	return res.redirect('/index.html');  
+});
+
+// get function that will show data from database
+app.get('/ajax_get_ticket', function(req, res) {
+
+    client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl
+      })
+  
+    client.connect()
+
+    const selectText = "SELECT gas_company, truck_company, driver_name, truck_number, trailer_number, material_location, water_type,\
+                        water_total, solid_type, solid_total, wet_type, wet_total\
+                        FROM ticket_table WHERE ticket_id=$1";
+    client.query(selectText, [newTicketID], function(err, result) {
+        if (err) {
+            throw err;
+        }
+  
+        var size = result.rows.length;
+        console.log(size);
+        console.log(result);
+        res.send(result);
+  
+        client.end();
+  
+      });
+});
+
+app.get('/ajax_get_gas_comp', function(req, res) {
+
+    client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl
+      })
+  
+    client.connect()
+
+    const selectText = "SELECT gas_company FROM gas_companies_table";
+    client.query(selectText, function(err, result) {
+        if (err) {
+            throw err;
+        }
+
+        var size = result.rows.length;
+        console.log(size);
+        console.log(result);
+        res.send(result);
+    });
 
 });
 
+app.get('/ajax_get_truck_comp', function(req, res) {
 
+    client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl
+      })
+  
+    client.connect()
+
+    const selectText = "SELECT truck_company FROM truck_companies_table";
+    client.query(selectText, function(err, result) {
+        if (err) {
+            throw err;
+        }
+
+        var size = result.rows.length;
+        console.log(size);
+        console.log(result);
+        res.send(result);
+    });
+
+});
