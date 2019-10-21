@@ -42,7 +42,7 @@ app.get('/',function(req,res){
 	res.set({
 		'Access-Control-Allow-Origin' : '*' // creates access from any orgin
 	});
-	return res.redirect('/public/edit_client.html');
+	return res.redirect('/public/index.html');
 }).listen(3000);
 
 console.log("Server listening at : 3000");
@@ -141,16 +141,21 @@ app.get('/ajax_get_clients', function(req, res) {
       ssl:config.db.ssl
     })
 
-  client.connect()
+    client.connect()
+
     client.query("SELECT client_id, name, company, email, phone, phone_type, address_one,\
                         address_two, city, state, zip, county, start_date, company_status\
                          FROM client_table", function(err, result) {
-      if (err) {
-        throw err;
+      if (err)
+      {
+          console.log(err);
+          client.end();
       }
-
-      var row1 = result.rows.length;
-      console.log(row1);
+      else{
+          //console.log(err,res)
+          console.log("Success! Client data sent.");
+          client.end();
+          }
 
       res.send(result);
 

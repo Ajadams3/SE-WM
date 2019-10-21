@@ -1,6 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <head>
+    <script src="jquery-1.12.4.js"></script>
+    <script>
+
+      function getClients() {
+        $.ajax({
+          type: 'GET',
+          url: 'http://localhost:3000/ajax_get_clients',
+          dataType: 'json',
+          async: false
+        })
+        .done(function(result) {
+
+        //  for loop is how you can step through the database per row
+        //  for(let step = 0;step < result.rows.length;step++)
+
+        document.getElementById('company').value = result.rows[0].name;
+        document.getElementById('name').value = result.rows[0].company;
+        document.getElementById('email').value = result.rows[0].email;
+        document.getElementById('phone').value = result.rows[0].phone;
+        document.getElementById('phoneType').value = result.rows[0].phone_type;
+        document.getElementById('addressOne').value = result.rows[0].address_one;
+        document.getElementById('addressTwo').value = result.rows[0].address_two;
+        document.getElementById('city').value = result.rows[0].city;
+        document.getElementById('state').value = result.rows[0].state;
+        document.getElementById('zip').value = result.rows[0].zip;
+        document.getElementById('county').value = result.rows[0].county;
+        document.getElementById('startDate').value = result.rows[0].start_date;
+        //document.getElementById('toggle').value = result.rows[0].address_two;
+        })
+        .fail(function(jqXHR, testStatus, err) {
+          console.log('AJAX error response:', textStatus);
+        });
+      }
+
+      </script>
+
+      <script>
+        function SetDate(){
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        if (month < 10) month = "0" + month;
+        if (day < 10) day = "0" + day;
+        var today = year + "-" + month + "-" + day;
+        document.getElementById('startDate').value = today;
+        }
+
+        function myToggleFunction() {
+        var checkBox = document.getElementById("toggle");
+        if (checkBox.checked == true) {
+        text.style.display = "block";
+        document.getElementById("toggle").value = "true";
+        } else {
+        text.style.display = "none";
+        document.getElementById("toggle").value = "false";
+        }
+        }
+      </script>
+
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+      <script>
+$( function() {
+
+  var itemsArrray = [
+    {
+      value: "Item 1",
+      label: "Item 1",
+      company: "Company 1",
+      company_id: "cmp1"
+    },
+    {
+      value: "Item 2",
+      label: "Item 2",
+      company: "Company 2",
+      company_id: "cmp2"
+    },
+    {
+      value: "Item 3",
+      label: "Item 3",
+      company: "Company 3",
+      company_id: "cmp3"
+    }
+  ];
+
+  $(".inputitem").autocomplete({
+    //source: 'search.php',
+    source: itemsArrray,
+    minLength: 1,
+    select: function(event, ui) {
+      //Here $(this) points to the current autocomplete input element
+      //$(this).closest('li').find('input.company_name').val(ui.item.company);
+      //$(this).closest('tr').find('input.company_id').val(ui.item.company_id);
+    }
+  });
+
+} );
+</script>
+
      <meta charset="UTF-8">
 
 <!-- Temporary css -->
@@ -59,6 +160,15 @@
 
         .add_client-style ul li .field-full{
         width: 100%;
+        }
+
+        .add_client-style ul li .field-sized{
+        width: 20%;
+        margin-left: 32%;
+        }
+
+        .SearchButton ul li {
+          margin-left: 25%;
         }
 
         .add_client-style ul li input.align-left{
@@ -185,41 +295,25 @@
             -webkit-text-fill-color: #020202 !important;
             }
       </style>
-
-        <script>
-          function SetDate(){
-   	      var date = new Date();
-        	var day = date.getDate();
-        	var month = date.getMonth() + 1;
-        	var year = date.getFullYear();
-        	if (month < 10) month = "0" + month;
-        	if (day < 10) day = "0" + day;
-        	var today = year + "-" + month + "-" + day;
-        	document.getElementById('startDate').value = today;
-          }
-
-          function myToggleFunction() {
-          var checkBox = document.getElementById("toggle");
-   	      if (checkBox.checked == true) {
-   		    text.style.display = "block";
-   		    document.getElementById("toggle").value = "true";
-   	      } else {
-   		    text.style.display = "none";
-   		    document.getElementById("toggle").value = "false";
-          }
-          }
-        </script>
 </head>
 
 <body>
-<body onload="getClients()">
+<!--<body onload="getClients()"> -->
 	<br>
 	<br>
 	<br>
 
+
     <form action='/add_client' class="add_client-style" method='post'>
+
 		<p id="add_client_title">Edit Client</p>
+
 		<ul>
+
+      <li><input class="field-style field-sized align-none inputitem" id="" autocomplete="off" placeholder="Enter client name to search" name="item_name[]" type="text">
+
+      <input class="SearchButton" style="width:110px" type="submit" value="Search"></li>
+
             <li><input class="field-style field-full align-none" id="company" name="company" type="text"></li>
 
             <li><input class="field-style field-full align-none" id="name" name="name" type="text"></li>
@@ -250,38 +344,6 @@
 		</ul>
 	</form>
 
-  <script src="jquery-1.12.4.js"></script>
-  <script>
 
-    function getClients() {
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/ajax_get_clients',
-        dataType: 'json'
-      })
-      .done(function(result) {
-
-        //----for loop is how you can step through the database per row
-      //  for(let step = 0;step < result.rows.length;step++)
-
-      document.getElementById('company').value = result.rows[0].name;
-      document.getElementById('name').value = result.rows[0].company;
-      document.getElementById('email').value = result.rows[0].email;
-      document.getElementById('phone').value = result.rows[0].phone;
-      document.getElementById('phoneType').value = result.rows[0].phone_type;
-      document.getElementById('addressOne').value = result.rows[0].address_one;
-      document.getElementById('addressTwo').value = result.rows[0].address_two;
-      document.getElementById('city').value = result.rows[0].city;
-      document.getElementById('state').value = result.rows[0].state;
-      document.getElementById('zip').value = result.rows[0].zip;
-      document.getElementById('county').value = result.rows[0].county;
-      document.getElementById('startDate').value = result.rows[0].start_date;
-      //document.getElementById('toggle').value = result.rows[0].address_two;
-      })
-      .fail(function(jqXHR, testStatus, err) {
-        console.log('AJAX error response:', textStatus);
-      });
-    }
-    </script>
 </body>
 </html>

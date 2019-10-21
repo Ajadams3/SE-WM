@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+
+<!-- Temporary css -->
+<<style>
+  .wrap {
+    text-align: center;
+}
+
+.button {
+    position: absolute;
+    top: 50%;
+}
+
+.add_client-style input[type="button"],
+.add_client-style input[type="submit"] {
+-moz-box-shadow: inset 0px 1px 0px 0px #3985B1;
+-webkit-box-shadow: inset 0px 1px 0px 0px rgb(30, 120, 172);
+box-shadow: inset 0px 1px 0px 0px #3985B1;
+background-color: rgb(26, 101, 241);
+border: 1px solid rgb(102, 106, 107);
+display: inline-block;
+margin: 10px;
+margin-left: 25px;
+cursor: pointer;
+color: #FFFFFF;
+padding: 10px 18px;
+text-decoration: none;
+font: 14px sans-serif,Arial, Helvetica;
+}
+
+.add_client-style ul li input[type="button"]:hover,
+.add_client-style ul li input[type="submit"]:hover {
+ background-color:  rgb(38, 143, 74);
+}
+</style>
+     <title> Add Client </title>
+     <h1 style=text-align:center>GREEN LEAF</h1>
+     <h3 style=text-align:center>Enviromental Services</H3>
+
+
+
+
+</head>
+<body>
+  <div class="wrap">
+<div class="add_client-style">
+
+  <input type="submit" id="add"  name="add" value="Add Client" onclick="location.href='add_client.html';" /><br>
+  <input type="submit" id="edit"  name="edit" value="Edit Client" onclick="location.href='edit_client.html';" /><br>
+
+  </div>
+  </div>
+
+  <P>Note: User has option to create or edit a previous client</p>
+</body>
+</html>

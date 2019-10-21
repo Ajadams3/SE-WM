@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+     <title>Pin authentication</title>
+
+<!-- Temporary css -->
+<style>
+
+body {
+    margin:50px;
+
+    text-align:center;
+}
+
+.numberButtons
+{
+
+width: 60px;
+height: 60px;
+}
+
+.one{
+  margin-right: .3%;
+}
+</style>
+
+
+<script>
+//CONFIG:
+var correctPinNumber = "1234";
+
+//OTHER
+var totalAttempts = 0;
+
+
+function addNumber(value)
+{
+	var pin = document.getElementById("pinNumber");
+	pin.value += value;
+}
+
+function clearPad()
+{
+	document.getElementById("pinNumber").value = "";
+}
+
+function deleteLastElement()
+{
+  let str = document.getElementById("pinNumber").value;
+  str = str.substring(0, str.length - 1);
+  document.getElementById("pinNumber").value = str;
+}
+
+function  checkPinNumber()
+{
+	//get values from doc.
+	var formArea= document.getElementById("formArea");
+	var errorArea = document.getElementById("errorMessage");
+	var pinNumber = document.getElementById("pinNumber").value;
+
+//validate PIN.
+if (pinNumber == correctPinNumber)
+{
+	document.location.href = url;
+	return;
+}
+else
+{
+	errorArea.innerHTML = "Incorrect Pin, please try again";
+	clearPad()
+}
+//add one more access attempt;
+totalAttempts++;
+
+if( totalAttempts == 3)
+{
+	formArea.style.display = "none";
+	errorArea.innerHTML = "Too many attempts.. sorry.";
+	clearPad()
+}
+}
+
+</script>
+
+</head>
+
+
+
+<body>
+  <h1 style=text-align:center>User logs in with pin here</h1>
+
+
+  <p>
+    <input type="text" name="pinNumber" id="pinNumber" style="width:180px"/>
+    <br />
+    <input type="button" class="numberButtons one"   value="1" onclick="addNumber(this.value)"  />
+    <input type="button" class="numberButtons"  value="2" onclick="addNumber(this.value)" />
+    <input type="button" class="numberButtons"  value="3" onclick="addNumber(this.value)" />
+    <br />
+    <input type="button" class="numberButtons"  value="4" onclick="addNumber(this.value)" />
+    <input type="button" class="numberButtons"  value="5" onclick="addNumber(this.value)" />
+    <input type="button" class="numberButtons"  value="6" onclick="addNumber(this.value)" />
+    <br />
+    <input type="button" class="numberButtons"  value="7" onclick="addNumber(this.value)" />
+    <input type="button" class="numberButtons"  value="8" onclick="addNumber(this.value)" />
+    <input type="button" class="numberButtons"  value="9" onclick="addNumber(this.value)" />
+    <br />
+    <input type="button" class="numberButtons"  value="<--" onclick="deleteLastElement()" />
+    <input type="button" class="numberButtons"  value="0" onclick="addNumber(this.value)" />
+    <input type="button" class="numberButtons"  value="Submit" onclick="location.href='pos.html';" />
+  </p>
+  <p>
+    <input type="submit" name="pinButton" id="pinButton" value="Reset" onclick="clearPad()" style="width:165px" />
+  </p>
+  <!--
+  <div class="wrap">
+<div class="add_client-style">
+
+  <input type="submit" id="submitDetails"  name="submitDetails" value="submit" onclick="location.href='pos.html';" /><br>
+  </div>
+  </div>
+  -->
+
+  <P>Note: In the process of creating pin verification</p>
+</body>
+</html>

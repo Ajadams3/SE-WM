@@ -1,10 +1,11 @@
-								
+
 .main{
 	padding:20px;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	border : 2px solid #3374ff;
-	border-radius: 15px;
-	
+	border-radius: 25px;
+	border
+
 }
 .main h1{
 	font-size: 50px;
@@ -15,6 +16,11 @@
 
 h2{
     text-align: center;
+}
+
+body{
+	padding-left: 300px;
+	padding-right: 300px;
 }
 input{
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
