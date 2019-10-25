@@ -4,10 +4,15 @@ var bodyParser = require('body-parser');
 var crypto = require('crypto');
 const pg = require('pg');
 var app = express();
+var ejs = require('ejs');
 var sequelize = require('sequelize');
 var client = new pg.Client();
 const config = require('./config');
 const { performance } = require('perf_hooks');
+
+// Set EJS as templating engine
+//app.set('view engine', 'html');
+//app.engine('html',require('ejs').renderFile);
 
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
     extended: true
@@ -15,6 +20,8 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 
 //enabling css style sheet
 app.use(express.static(__dirname + '/public'));
+//app.set('views', __dirname + '/views');
+
 
 var configs = {
     user:config.db.user,
@@ -130,7 +137,7 @@ addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_i
 	return res.redirect('/public/success.html');
 });
 
-app.get('/ajax_get_clients', function(req, res) {
+app.post('/login', function(req, res) {
 
   client = new Client({
       user:config.db.user,
@@ -143,9 +150,7 @@ app.get('/ajax_get_clients', function(req, res) {
 
     client.connect()
 
-    client.query("SELECT client_id, name, company, email, phone, phone_type, address_one,\
-                        address_two, city, state, zip, county, start_date, company_status\
-                         FROM client_table", function(err, result) {
+    client.query("SELECT email, password, pin, access_rights, name FROM login_table", function(err, results) {
       if (err)
       {
           console.log(err);
@@ -153,13 +158,95 @@ app.get('/ajax_get_clients', function(req, res) {
       }
       else{
           //console.log(err,res)
-          console.log("Success! Client data sent.");
+          console.log("Success! Login info sent!");
           client.end();
           }
 
-      res.send(result);
+          var userName, user_pin, user_access_code;
+          var user_email = req.body.email_id;
+          var user_pass = req.body.pass_id;
+          console.log(user_pass);
+          var emailBool = false;
+          var passBool = false;
+          var success = false;
+
+        //  for loop is how you can step through the database per row
+          for(let step = 0;step < results.rows.length; step++)
+          {
+            if(results.rows[step].email == user_email)
+            {
+              emailBool = true;
+              user_pin = results.rows[step].pin;
+            }
+
+            if(results.rows[step].password == user_pass)
+            {
+              passBool = true;
+            }
+          }
+
+          if(emailBool == true && passBool == true)
+          {
+            success = true;
+
+          //  window.location.href="login_pin.html";
+          }
+          else{
+            success = false;
+          }
 
       client.end();
 
+      if(success)
+      {
+        //res.send('<script>alert("Login Succesfull!")</script>');
+      res.redirect('/login_pin.html');
+      //res.send('<script>alert("Login Succesfull!")</script>');
+      //var data = 0;
+      //return res.sendFile('login_pin.html', { data: data });
+    //  return res.sendFile('login_pin.html');
+
+
+      }
+
+      else
+      {
+      //res.send('<script>alert("Login denied, re-enter email and password!")</script>');
+      return res.redirect('login.html');
+      }
+
+
+
     });
   });
+
+  app.get('/ajax_get_login', function(req, res) { // gets currently do not work on heroku
+
+    client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl
+      })
+
+    client.connect()
+
+    const selectText = "SELECT gas_company, truck_company, driver_name, truck_number, trailer_number, material_location, water_type,\
+                        water_total, solid_type, solid_total, wet_type, wet_total\
+                        FROM ticket_table WHERE ticket_id=$1";
+    client.query(selectText, [newTicketID], function(err, result) {
+        if (err) {
+            throw err;
+        }
+
+        var size = result.rows.length;
+        console.log(size);
+        console.log(result);
+        res.send(result);
+
+        client.end();
+
+      });
+});

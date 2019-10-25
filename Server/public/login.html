@@ -1,183 +1,54 @@
 <html>
 	<head>
 		<title> Signup Form </title>
+		<link rel="stylesheet" type="text/css" href="style.css">
 
+		<script src="jquery-1.12.4.js"></script>
+		<script>
 
-		<!-- Including temp css -->
+			function checkLogin() {
+				$.ajax({
+					type: 'GET',
+					url: 'http://localhost:3000/ajax_get_login',
+					dataType: 'json',
+					async: false
+				})
+				.done(function(success) {
 
-    <style>
-    .main{
-      padding:20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      border : 2px solid #3374ff;
-      border-radius: 25px;
-      border
+					if(success == true)
+					{
+						alert("Email and password accepted!");
+//						localStorage["e.key"] = user_email;
 
-    }
-    .main h1{
-      font-size: 50px;
-      text-align:center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #265ec5;
-    }
+						window.location.href="login_pin.html";
+					}
+					else{
+						alert("Email and password denied!");
+					}
+				})
 
-    h2{
-        text-align: center;
-    }
+				.fail(function(jqXHR, testStatus, err) {
+					console.log('AJAX error response:', textStatus);
+				});
+			}
 
-    body{
-      padding-left: 350px;
-      padding-right: 350px;
-
-    }
-    input{
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        width: 100%;
-      font-size: 30px;
-        padding: 12px 20px;
-        margin: 8px 0;
-        border: none;
-        border-bottom: 2px solid #3374ff;
-    }
-    input[type=submit] {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      width: 100%;
-        background-color: #275fce;
-        border: none;
-        color: white;
-        padding: 16px 32px;
-        text-decoration: none;
-        margin: 4px 2px;
-        cursor: pointer;
-      border-radius: 15px;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus,
-    button:focus {
-        outline: none;
-    }
-
-    input:hover {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-      border: none;
-        border-bottom: 2px solid #941c1c;
-    }
-
-    input[type=submit]:hover {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      width: 100%;
-        background-color: #941c1c;
-        border: none;
-        color: white;
-        padding: 16px 32px;
-        text-decoration: none;
-        margin: 4px 2px;
-        cursor: pointer;
-      border-radius: 15px;
-    }
-submit{
-    -moz-box-shadow: inset 0px 1px 0px 0px #3985B1;
-    -webkit-box-shadow: inset 0px 1px 0px 0px rgb(30, 120, 172);
-    box-shadow: inset 0px 1px 0px 0px #3985B1;
-    background-color: rgb(26, 101, 241);
-    border: 1px solid rgb(102, 106, 107);
-    display: inline-block;
-    margin: 10px;
-    margin-left: 25px;
-    cursor: pointer;
-    color: #FFFFFF;
-    padding: 10px 18px;
-    text-decoration: none;
-    font: 14px sans-serif,Arial, Helvetica;
-}
-    </style>
-    </style>
-
-        <script language="JavaScript" type="text/javascript">
-
-           function checkform (form)
-           {
-               /* isEmpty() returns true and alerts the user if they left a field empty */
-               function isEmpty (fix, called)
-               {
-                   if (fix=="")
-                   {
-                   alert("Please enter " + called);
-                   return true;
-                   } else {
-                   return false;
-                   }
-               }
-
-               /* charCheck() returns false and alerts the user if they used any non-alphanumeric characters */
-               function charCheck(fix)
-               {
-                   var validchars = '@-_.0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                   if(isValid(fix,validchars))
-                   {
-                       return true;
-                   } else {
-                       alert("Please use only letters or numbers in this field");
-                       return false;
-                   }
-               }
-
-               /* isValid is used by the charCheck() function to look through each 'validchars' one at a time */
-               function isValid(string,validchars)
-               {
-                   for (var i=0; i< string.length; i++)
-                   {
-                   if (validchars.indexOf(string.charAt(i)) === -1) {return false;}
-                   }
-                   return true;
-               }
-
-               // Check for empty fields
-               if (is_empty (form.t_email.value,"your email address")) { form.t_email.focus();  return false;}
-               if (is_empty (form.t_password.value,"your password")) { form.t_password.focus();  return false;}
-
-               //check for weird chars
-               if (charCheck(form.t_email.value)===false) {form.t_email.focus(); return false;}
-               if (charCheck(form.t_password.value)===false) {form.t_password.focus(); return false;}
-
-               return true ;
-           }
-            </script>
+			</script>
 
 	</head>
 	<body>
 
-		<br>
-		<br>
-		<br>
-		<div class="container" >
-			<div class="row">
+		<div class="login-page">
+		  <div class="form">
+		    <form class="login-form" id='log_form' action='/login' method='POST'>
+		      <input type="email" id="email_id" name="email_id" placeholder="Email" required/>
+		      <input type="password" id="pass_id" name="pass_id" placeholder="Password" required/>
+					<input type="submit" class="login_button" value="Login" />
+		      <p class="message">Not registered? <a href="#">Create an account</a></p>
+					<p class="message">Forgot password? <a href="#">Retrieve password</a></p>
 
-				<div class="col-md-6 main">
-					<!-- Action attribute is the route on backend. Method is POST -->
-                    <form id='frmSignIn' name='frmSignIn' action='/sign_up' method='post' onsubmit='return checkform(this);'>
-						<h1> Login </h1>
-
-						<input class="box" type="email" name="email" id="email" placeholder="Enter your E-Mail " required /><br>
-
-                        <input class="box" type="password" name="password" id="password"  placeholder="Enter your Password " required/><br>
-
-						<br>
-						<input type="submit" id="submitDetails"  name="submitDetails" value="Submit" onclick="location.href='login_pin.html';" /><br>
-
-					</form>
-
-				</div>
-
-			</div>
+		    </form>
+		  </div>
 		</div>
-    <P>Note: After initial login, user will login with pin</p>
 
 	</body>
 </html>
