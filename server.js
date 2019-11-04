@@ -5,17 +5,24 @@ var crypto = require('crypto');
 const pg = require('pg');
 var app = express();
 //var ejs = require('ejs');
+//var ejs = require('ejs');
 var sequelize = require('sequelize');
 var client = new pg.Client();
 const config = require('./config');
-const { performance } = require('perf_hooks');
+
+// Set EJS as templating engine
+//app.set('view engine', 'html');
+//app.engine('html',require('ejs').renderFile);
+
 
 // Set EJS as templating engine
 //app.set('view engine', 'html');
 //app.engine('html',require('ejs').renderFile);
 
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
+//app.set('views', __dirname + '/views');
     extended: true
+
 }));
 
 //enabling css style sheet
@@ -42,7 +49,7 @@ pool.connect(function(err, client, done) {
     if(err) {
         return console.error('Error fetching client from pool', err);
     }
-});
+	return res.redirect('/public/index.html');
 
 // creating the server and default routes
 app.get('/',function(req,res){
@@ -53,23 +60,16 @@ app.get('/',function(req,res){
 }).listen(process.env.PORT || 3000);
 
 console.log("Server listening at : 3000");
-app.use('/public', express.static(__dirname + '/public'));
-
 //To allow the storage of spaces in text fields
-app.use(bodyParser.text({ type: 'text/html' }))
-app.use(bodyParser.text({ type: 'text/xml' }))
-
-function primary_key_generator(){
-    return (
       Number(String(Math.random()).slice(2)) +
       Date.now() +
       Math.round(performance.now())
     ).toString(36);
-}
-
+      Number(String(Math.random()).slice(2)) +
+      Date.now() +
     //recieve request from the front end and store it into the database
 app.post('/add_client' , function(req,res){
-
+      Math.round(performance.now())
     var company_input = req.body.company;
     var clientName_input = req.body.name;
     var email_input = req.body.email;
@@ -85,69 +85,21 @@ app.post('/add_client' , function(req,res){
     var clientId_input = primary_key_generator();
     var companyStatus_input = req.body.toggle;
     var companyStatus = false;
-
+}
     // checking if toggle switch is on or off
     if( companyStatus_input == "on" )
-    {
+    if( companyStatus_input == "on" )
         companyStatus = true;
-    }
 
-    else
-    {
-        companyStatus = false;
-    }
-
-    // reversing the date for postgreSQL
     startDate_input = startDate_input.split("/").reverse().join("-");
-
-const client = new Client({
-    user:config.db.user,
-    host:config.db.host,
-    database:config.db.database,
-    password:config.db.password,
-    port:config.db.port,
-    ssl:config.db.ssl
-  })
-
-client.connect()
-
-const insertText = 'INSERT INTO client_table (client_id, name, company, email, phone, phone_type, address_one,\
-                    address_two, city, state, zip, county, start_date, company_status) VALUES ($1, $2, $3, $4, $5, $6,\
-                    $7, $8, $9, $10, $11, $12, $13, $14)'
-
-client.query(insertText, [clientId_input, clientName_input, company_input, email_input, phone_input, phoneType_input,
-addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_input, startDate_input, companyStatus],(err,res)=>{
-
-    if (err)
-    {
-        console.log(err);
-        client.end();
-        //res.status(400).send(err);
-    }
-    else{
-        console.log(err,res)
+    else
         console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );
-        client.end();
-    }
-})
-
-	res.set({
-		'Access-Control-Allow-Origin' : '*'
-	});
-	return res.redirect('/public/success.html');
-});
+        companyStatus = false;
 
 app.post('/login', function(req, res) {
-
-  client = new Client({
-      user:config.db.user,
-      host:config.db.host,
-      database:config.db.database,
+    // reversing the date for postgreSQL
+    startDate_input = startDate_input.split("/").reverse().join("-");
       password:config.db.password,
-      port:config.db.port,
-      ssl:config.db.ssl
-    })
-
     client.connect()
 
     client.query("SELECT email, password, pin, access_rights, name FROM login_table", function(err, results) {
@@ -157,21 +109,23 @@ app.post('/login', function(req, res) {
           client.end();
       }
       else{
-          //console.log(err,res)
           console.log("Success! Login info sent!");
           client.end();
-          }
+const insertText = 'INSERT INTO client_table (client_id, name, company, email, phone, phone_type, address_one,\
+                    address_two, city, state, zip, county, start_date, company_status) VALUES ($1, $2, $3, $4, $5, $6,\
+                    $7, $8, $9, $10, $11, $12, $13, $14)'
 
-          var userName, user_pin, user_access_code;
+client.query(insertText, [clientId_input, clientName_input, company_input, email_input, phone_input, phoneType_input,
+addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_input, startDate_input, companyStatus],(err,res)=>{
           var user_email = req.body.email_id;
           var user_pass = req.body.pass_id;
           var emailBool = false;
           var passBool = false;
           var success = false;
-
+        //res.status(400).send(err);
         //  for loop is how you can step through the database per row
           for(let step = 0;step < results.rows.length; step++)
-          {
+        console.log(err,res)
             if(results.rows[step].email == user_email)
             {
               emailBool = true;
@@ -180,14 +134,12 @@ app.post('/login', function(req, res) {
 
             if(results.rows[step].password == user_pass)
             {
-              passBool = true;
+	return res.redirect('/public/success.html');
             }
           }
-
+app.post('/login', function(req, res) {
           if(emailBool == true && passBool == true)
-          {
-            success = true;
-
+  client = new Client({
           //  window.location.href="login_pin.html";
           }
           else{
@@ -196,28 +148,48 @@ app.post('/login', function(req, res) {
 
       client.end();
 
-      if(success)
       {
+        //res.send('<script>alert("Login Succesfull!")</script>');
+    client.query("SELECT email, password, pin, access_rights, name FROM login_table", function(err, results) {
+    //  return res.sendFile('login_pin.html');
+
+
+      }
+      else
+      {
+          //console.log(err,res)
+          console.log("Success! Login info sent!");
+      }
+
+
+          var userName, user_pin, user_access_code;
+          var user_email = req.body.email_id;
+          var user_pass = req.body.pass_id;
+          var emailBool = false;
+          var passBool = false;
+          var success = false;
+        //  for loop is how you can step through the database per row
+          for(let step = 0;step < results.rows.length; step++)
+            if(results.rows[step].email == user_email)
+            {
+              emailBool = true;
+              user_pin = results.rows[step].pin;
+            if(results.rows[step].password == user_pass)
+              passBool = true;
+          if(emailBool == true && passBool == true)
+            success = true;
+
+          //  window.location.href="login_pin.html";
+            success = false;
+      if(success)
         //res.send('<script>alert("Login Succesfull!")</script>');
       res.redirect('/login_pin.html');
       //res.send('<script>alert("Login Succesfull!")</script>');
       //var data = 0;
       //return res.sendFile('login_pin.html', { data: data });
     //  return res.sendFile('login_pin.html');
-
-
-      }
-
       else
       {
       //res.send('<script>alert("Login denied, re-enter email and password!")</script>');
       return res.redirect('login.html');
       }
-
-
-
-    });
-  });
-
-
-
