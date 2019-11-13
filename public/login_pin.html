@@ -5,7 +5,7 @@
      <meta charset="UTF-8">
      <title>Pin authentication</title>
 <script>
-	
+
 var totalAttempts = 0;
 function addNumber(value)
 {
@@ -80,7 +80,7 @@ function message()
     <input type="button" class="numberButtons"  value="0" onclick="addNumber(this.value)" />
     <input type="button" alt="submit" value = "✓" class="checkmark"   onclick="checkPinNumber()" />
   </p>
-	    
+
     <input type="submit" name="pinButton" class="reset_button clearButton" id="pinButton" value="Reset" onclick="clearPad()" style="width:197px" />
 
     </div>
@@ -89,7 +89,7 @@ function message()
 	window.onload = function(){
 	setTimeout(()=>{
     	message();
-	},15)
+	},20)
 	}
   </script>
 </body>

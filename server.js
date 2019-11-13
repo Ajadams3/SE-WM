@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var crypto = require('crypto');
 const pg = require('pg');
 var app = express();
-//var ejs = require('ejs');
+var ejs = require('ejs');
 var sequelize = require('sequelize');
 var client = new pg.Client();
 const config = require('./config');
@@ -16,6 +16,9 @@ app.engine('html',require('ejs').renderFile);
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
     extended: true
 }));
+
+//var DATABASE_URL=$(heroku config:get DATABASE_URL -a dataflow-project) node
+
 
 //enabling css style sheet
 app.use(express.static(__dirname + '/public'));
@@ -131,7 +134,7 @@ addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_i
 	res.set({
 		'Access-Control-Allow-Origin' : '*'
 	});
-	return res.redirect('/public/success.html');
+	return res.redirect('pos.html');
 });
 
 app.post('/pre_login', function(req, res) {
@@ -154,7 +157,7 @@ app.post('/get_clients', function(req, res) {
 
     client.connect()
 
-    client.query("SELECT name FROM client_table", function(err, results) {
+    client.query("SELECT company FROM client_table", function(err, results) {
       if (err)
       {
           console.log(err);
@@ -162,10 +165,9 @@ app.post('/get_clients', function(req, res) {
       }
       else{
           //console.log(err,res)
-          console.log("Success! Client names sent!");
+          console.log("Success! Client sent!");
           client.end();
           }
-          console.log(results);
 
       return res.render("edit_client.html",{names: results});
 
@@ -240,6 +242,142 @@ app.post('/login', function(req, res) {
     //res.send('<script>alert("Login denied, re-enter email and password!")</script>');
      return res.render("login.html",{success: success});
      }
+
+    });
+  });
+
+  app.post('/get_edit_client', function(req, res) {
+
+    var company_name = req.body.key;
+
+    var selectedCompany = company_name[0];
+    console.log(selectedCompany);
+
+    client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl
+      })
+
+      client.connect()
+
+      const getClient = 'SELECT *  FROM client_table WHERE company = $1'
+
+      client.query(getClient, [selectedCompany], function(err,compResults){
+
+        if (err)
+          {
+              console.log(err);
+              client.end();
+          }
+          else{
+              client.end();
+              }
+
+        
+
+        return res.render("edit_selected_client.html",{client_info: compResults});
+
+    });
+  });
+
+app.post('/update_client', function(req, res) {
+
+  var company_input = req.body.company;
+  var clientName_input = req.body.name;
+  var email_input = req.body.email;
+  var phone_input = req.body.phone;
+  var phoneType_input= req.body.phoneType;
+  var addressOne_input = req.body.addressOne;
+  var addressTwo_input = req.body.addressTwo;
+  var city_input= req.body.city;
+  var state_input = req.body.state;
+  var zip_input = req.body.zip;
+  var county_input = req.body.county;
+  var startDate_input = req.body.startDate;
+  var clientId = req.body.key;
+  var companyStatus_input = req.body.toggle;
+  var companyStatus = false;
+  //startDate_input = startDate_input.split("/").reverse().join("-");
+  console.log(companyStatus_input);
+  // checking if toggle switch is on or off
+  if( companyStatus_input != "on" )
+  {
+      companyStatus = false;
+  }
+
+  else if(companyStatus_input == "on")
+  {
+      companyStatus = true;
+  }
+
+  // reversing the date for postgreSQL
+
+
+  const client = new Client({
+      user:config.db.user,
+      host:config.db.host,
+      database:config.db.database,
+      password:config.db.password,
+      port:config.db.port,
+      ssl:config.db.ssl
+  })
+
+
+  client.connect()
+
+  const updateTable = 'UPDATE client_table SET name = $1, company = $2, email = $3, phone = $4, phone_type = $5, address_one = $6,\
+                      address_two = $7, city = $8, state = $9, zip = $10, county = $11, start_date = $12, company_status = $13\
+                      WHERE client_id = $14'
+
+  client.query(updateTable, [clientName_input, company_input, email_input, phone_input, phoneType_input, addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_input, startDate_input, companyStatus, clientId],(err,res)=>{
+
+      if (err)
+      {
+          console.log(err);
+          client.end();
+      }
+      else{
+          console.log(err,res);
+          console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );
+          client.end();
+      }
+  })
+      return res.render("pos.html");
+
+  });
+
+  app.post('/view_clients', function(req, res) {
+
+    client = new Client({
+        user:config.db.user,
+        host:config.db.host,
+        database:config.db.database,
+        password:config.db.password,
+        port:config.db.port,
+        ssl:config.db.ssl
+      })
+
+      client.connect()
+
+
+
+        client.query("SELECT *  FROM client_table", function(err, results) {
+          if (err)
+          {
+              console.log(err);
+              client.end();
+          }
+          else{
+              client.end();
+              }
+
+              //console.log(results);
+
+        return res.render("view_clients.html",{results: results});
 
     });
   });
