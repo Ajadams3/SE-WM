@@ -491,14 +491,168 @@ app.post('/pos8' , function(req,res){
     var printer = new PdfPrinter(fonts);
     var fs = require('fs');
     
-    var docDefinition = {
+    var docdef = {
         content: [
-            'First paragraph',
-            'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
-        ]
-    };
+            {
+                columns: [
+                    {
+                        alignment: 'left',
+                        table: {
+                            heights: 15,
+                            body: [
+                                ['TRUCK TICKET:', 'ticketnum'],
+                                ['GAS COMPANY NAME: ', 'gascompname'],
+                                ['DATE: ', 'date'],
+                                ['TRUCK #: ', 'trucknum'],
+                                ['TRAILER #: ', 'trailernum'],
+                                ['TRUCKING COMPANY: ', 'truckcompname'],
+                                ['LOCATION/WELL', 'loc']
+                            ]
+                        }
+                    },
+                    {
+                        alignment: 'center',
+                        text: 'Greenleaf logo\nMESA FACILITY\n15655 45 1/2 Road\nDebeque, CO  81630\n (970) 283-8992',
+                        
+                    }
+                ]
+            },
+            {
+                text:'\n\n_______________________________________________________________________________________________\n\n'
+            },
+            {
+                style: 'header',
+                text: 'Notes\n'
+            },
+            {
+                fontSize: 6,
+                text: '\n'
+            },
+            {
+                table: {
+                    widths: ['*'],
+                    heights: 30,
+                    body: [
+                        ['notes']
+                    ]
+                }
+            },
+            {
+                style: 'header',
+                text: '\nWater\n'
+            },
+            {
+                fontSize: 6,
+                text: '\n'
+            },
+            {
+                table: {
+                    widths: ['*'],
+                    heights: 30,
+                    body: [
+                        ['watertotal']
+                    ]
+                }
+            },
+            {
+                style: 'header',
+                text: '\nSolids\n'
+            },
+            {
+                fontSize: 6,
+                text: '\n'
+            },
+            {
+                table: {
+                    widths: ['*'],
+                    heights: 30,
+                    body: [
+                        ['solidtotal']
+                    ]
+                }
+            },
+            {
+                style: 'header',
+                text: '\nWet Solids\n'
+            },
+            {
+                fontSize: 6,
+                text: '\n'
+            },
+            {
+                table: {
+                    widths: ['*'],
+                    heights: 30,
+                    body: [
+                        ['wetsolidtotal']
+                    ]
+                }
+            },
+            {
+                alignment: 'center',
+                style: 'header',
+                text: '\nTotals\n'
+            },
+            {
+                fontSize: 6,
+                text: '\n'
+            },
+            {
+                alignment: 'center',
+                table: {
+                    widths: ['*'],
+                    heights: 30,
+                    body: [
+                        ['totalwithunits']
+                    ]
+                }
+            },
+            {
+                fontSize: 6,
+                text: '\n\n\n'
+            },
+            {
+                table: {
+                    body: [
+                        [
+                            {
+                                fillColor: '#eeeeee',
+                                text: 'By signing below you agree that the above results are accurate and that the waste contains no hazardous materials as defined by the Resource Conservation and Recovery Act'
+                            }
+                        ],
+                        [
+                            {text: [
+                                'DRIVER NAME:                              ',
+                                {text: 'dname'}]
+                            }
+                        ],
+                        [
+                            {text: [
+                                'DRIVER SIGNATURE:                    ',
+                                {text: 'dsig'}]
+                            }
+                        ]
+                    ]
+                }
+            }
+        ],
+        styles: {
+            header: {
+                fontSize: 14,
+                bold: true
+            },
+            bigger: {
+                fontSize: 15,
+                italics: true
+            }
+        },
+        defaultStyle: {
+            columnGap: 20
+        }
+        
+    }
     
-    var pdfDoc = printer.createPdfKitDocument(docDefinition);
+    var pdfDoc = printer.createPdfKitDocument(docdef);
     pdfDoc.pipe(fs.createWriteStream('document.pdf'));
     pdfDoc.end();
 
