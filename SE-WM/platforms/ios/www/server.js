@@ -6,6 +6,7 @@ const pg = require('pg');
 var app = express();
 var sequelize = require('sequelize');
 var client = new pg.Client();
+var nodemailer = require('nodemailer');
 const config = require('./config');
 const { performance } = require('perf_hooks');
 var newTicketID;
@@ -475,7 +476,32 @@ app.post('/pos8' , function(req,res){
   
 	res.set({
 		'Access-Control-Allow-Origin' : '*'
-	});
+    });
+
+    var fonts = {
+        Roboto: {
+            normal: 'fonts/Roboto-Regular.ttf',
+            bold: 'fonts/Roboto-Bold.ttf',
+            italics: 'fonts/Roboto-Thin.ttf',
+            bolditalics: 'fonts/Roboto-Medium.ttf'
+        }
+    };
+    
+    var PdfPrinter = require('pdfmake');
+    var printer = new PdfPrinter(fonts);
+    var fs = require('fs');
+    
+    var docDefinition = {
+        content: [
+            'First paragraph',
+            'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+        ]
+    };
+    
+    var pdfDoc = printer.createPdfKitDocument(docDefinition);
+    pdfDoc.pipe(fs.createWriteStream('document.pdf'));
+    pdfDoc.end();
+
 	return res.redirect('/pos9.html');  
 });
 
