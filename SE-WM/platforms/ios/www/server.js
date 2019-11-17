@@ -470,191 +470,256 @@ app.post('/pos8' , function(req,res){
         else{
             console.log(err,res);
             console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
-            client.end();
+            // put second query here
+
+            var gascompname = "";
+            var truckcompname = "";
+            var dname = "";
+            var trucknum = "";
+            var trailernum = "";
+            var loc = "";
+            var wattype = "";
+            var watamnt = "";
+            var soltype = "";
+            var solamnt = "";
+            var wettype = "";
+            var wetamnt = "";
+            var notes = "";
+            var dsig = "";
+            var watertotal = "";
+            var solidtotal = "";
+            var wetsolidtotal = "";
+            var totalwithunits = "";
+        
+            const selectText = "SELECT gas_company, truck_company, driver_name, truck_number, trailer_number, material_location, water_type,\
+                                water_total, solid_type, solid_total, wet_type, wet_total, ticket_notes, signature\
+                                FROM ticket_table WHERE ticket_id=$1";
+                    
+            client.query(selectText, [newTicketID],(err,result)=>{
+        
+                if (err)
+                {
+                    console.log(err);
+                    client.end();
+                    res.status(400).send(err);
+                }
+                else{
+                    console.log(err,res);
+                    console.log("DATA was succesfully inputed into database ");//+ JSON.stringify(data) );    
+                    gascompname = result.rows[0].gas_company; 
+                    truckcompname = result.rows[0].truck_company;
+                    dname = result.rows[0].driver_name;
+                    trucknum = result.rows[0].truck_number;
+                    trailernum = result.rows[0].trailer_number;
+                    loc = result.rows[0].material_location;
+                    wattype = result.rows[0].water_type;
+                    watamnt = result.rows[0].water_total;
+                    soltype = result.rows[0].solid_type;
+                    solamnt = result.rows[0].solid_total;
+                    wettype = result.rows[0].wet_type;
+                    wetamnt = result.rows[0].wet_total;
+                    notes = result.rows[0].ticket_notes;
+                    dsig = result.rows[0].signature;
+
+                    if (wattype == "" && watamnt == 0) watertotal = "n/a";
+                    else watertotal = wattype + "                              " + watamnt + " BBLS";
+                    if (soltype == "" && solamnt == 0) solidtotal = "n/a";
+                    else solidtotal = soltype + "                              " + solamnt + " YARDS";
+                    if (wettype == "" && wetamnt == 0) wetsolidtotal = "n/a";
+                    else wetsolidtotal = wettype + "                              " + wetamnt + " BBLS";
+
+                    if (watertotal == "n/a" && solidtotal == "n/a") totalwithunits = wetamnt + " BBLS";
+                    else if (watertotal == "n/a" && wetsolidtotal == "n/a") totalwithunits = solamnt + " YARDS";
+                    else totalwithunits = watamnt + " BBLS";
+
+                    var fonts = {
+                        Roboto: {
+                            normal: 'fonts/Roboto-Regular.ttf',
+                            bold: 'fonts/Roboto-Bold.ttf',
+                            italics: 'fonts/Roboto-Thin.ttf',
+                            bolditalics: 'fonts/Roboto-Medium.ttf'
+                        }
+                    };
+                    
+                    var PdfPrinter = require('pdfmake');
+                    var printer = new PdfPrinter(fonts);
+                    var fs = require('fs');
+                    
+                    var docdef = {
+                        content: [
+                            {
+                                columns: [
+                                    {
+                                        alignment: 'left',
+                                        table: {
+                                            heights: 15,
+                                            body: [
+                                                ['TRUCK TICKET:', newTicketID],
+                                                ['GAS COMPANY NAME: ', gascompname],
+                                                ['DATE: ', today],
+                                                ['TRUCK #: ', trucknum],
+                                                ['TRAILER #: ', trailernum],
+                                                ['TRUCKING COMPANY: ', truckcompname],
+                                                ['LOCATION/WELL', loc]
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        alignment: 'center',
+                                        image: 'GreenleafLogo.jpg',
+                                        text: 'MESA FACILITY\n15655 45 1/2 Road\nDebeque, CO  81630\n (970) 283-8992',
+                                        
+                                    }
+                                ]
+                            },
+                            {
+                                text:'\n\n_______________________________________________________________________________________________\n\n'
+                            },
+                            {
+                                style: 'header',
+                                text: 'Notes\n'
+                            },
+                            {
+                                fontSize: 6,
+                                text: '\n'
+                            },
+                            {
+                                table: {
+                                    widths: ['*'],
+                                    heights: 30,
+                                    body: [
+                                        [notes]
+                                    ]
+                                }
+                            },
+                            {
+                                style: 'header',
+                                text: '\nWater\n'
+                            },
+                            {
+                                fontSize: 6,
+                                text: '\n'
+                            },
+                            {
+                                table: {
+                                    widths: ['*'],
+                                    heights: 30,
+                                    body: [
+                                        [watertotal]
+                                    ]
+                                }
+                            },
+                            {
+                                style: 'header',
+                                text: '\nSolids\n'
+                            },
+                            {
+                                fontSize: 6,
+                                text: '\n'
+                            },
+                            {
+                                table: {
+                                    widths: ['*'],
+                                    heights: 30,
+                                    body: [
+                                        [solidtotal]
+                                    ]
+                                }
+                            },
+                            {
+                                style: 'header',
+                                text: '\nWet Solids\n'
+                            },
+                            {
+                                fontSize: 6,
+                                text: '\n'
+                            },
+                            {
+                                table: {
+                                    widths: ['*'],
+                                    heights: 30,
+                                    body: [
+                                        [wetsolidtotal]
+                                    ]
+                                }
+                            },
+                            {
+                                alignment: 'center',
+                                style: 'header',
+                                text: '\nTotals\n'
+                            },
+                            {
+                                fontSize: 6,
+                                text: '\n'
+                            },
+                            {
+                                alignment: 'center',
+                                table: {
+                                    widths: ['*'],
+                                    heights: 30,
+                                    body: [
+                                        [totalwithunits]
+                                    ]
+                                }
+                            },
+                            {
+                                fontSize: 6,
+                                text: '\n\n\n'
+                            },
+                            {
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                fillColor: '#eeeeee',
+                                                text: 'By signing below you agree that the above results are accurate and that the waste contains no hazardous materials as defined by the Resource Conservation and Recovery Act'
+                                            }
+                                        ],
+                                        [
+                                            {text: [
+                                                'DRIVER NAME:                              ',
+                                                {text: dname}]
+                                            }
+                                        ],
+                                        [
+                                            {text: [
+                                                'DRIVER SIGNATURE:                    ',
+                                                {text: dsig}]
+                                            }
+                                        ]
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 14,
+                                bold: true
+                            },
+                            bigger: {
+                                fontSize: 15,
+                                italics: true
+                            }
+                        },
+                        defaultStyle: {
+                            columnGap: 20
+                        }
+                        
+                    }
+                    
+                    var pdfDoc = printer.createPdfKitDocument(docdef);
+                    pdfDoc.pipe(fs.createWriteStream('document.pdf'));
+                    pdfDoc.end();
+
+                    client.end();
+                }
+            })
         }
     })
   
 	res.set({
 		'Access-Control-Allow-Origin' : '*'
     });
-
-    var fonts = {
-        Roboto: {
-            normal: 'fonts/Roboto-Regular.ttf',
-            bold: 'fonts/Roboto-Bold.ttf',
-            italics: 'fonts/Roboto-Thin.ttf',
-            bolditalics: 'fonts/Roboto-Medium.ttf'
-        }
-    };
-    
-    var PdfPrinter = require('pdfmake');
-    var printer = new PdfPrinter(fonts);
-    var fs = require('fs');
-    
-    var docdef = {
-        content: [
-            {
-                columns: [
-                    {
-                        alignment: 'left',
-                        table: {
-                            heights: 15,
-                            body: [
-                                ['TRUCK TICKET:', 'ticketnum'],
-                                ['GAS COMPANY NAME: ', 'gascompname'],
-                                ['DATE: ', 'date'],
-                                ['TRUCK #: ', 'trucknum'],
-                                ['TRAILER #: ', 'trailernum'],
-                                ['TRUCKING COMPANY: ', 'truckcompname'],
-                                ['LOCATION/WELL', 'loc']
-                            ]
-                        }
-                    },
-                    {
-                        alignment: 'center',
-                        text: 'Greenleaf logo\nMESA FACILITY\n15655 45 1/2 Road\nDebeque, CO  81630\n (970) 283-8992',
-                        
-                    }
-                ]
-            },
-            {
-                text:'\n\n_______________________________________________________________________________________________\n\n'
-            },
-            {
-                style: 'header',
-                text: 'Notes\n'
-            },
-            {
-                fontSize: 6,
-                text: '\n'
-            },
-            {
-                table: {
-                    widths: ['*'],
-                    heights: 30,
-                    body: [
-                        ['notes']
-                    ]
-                }
-            },
-            {
-                style: 'header',
-                text: '\nWater\n'
-            },
-            {
-                fontSize: 6,
-                text: '\n'
-            },
-            {
-                table: {
-                    widths: ['*'],
-                    heights: 30,
-                    body: [
-                        ['watertotal']
-                    ]
-                }
-            },
-            {
-                style: 'header',
-                text: '\nSolids\n'
-            },
-            {
-                fontSize: 6,
-                text: '\n'
-            },
-            {
-                table: {
-                    widths: ['*'],
-                    heights: 30,
-                    body: [
-                        ['solidtotal']
-                    ]
-                }
-            },
-            {
-                style: 'header',
-                text: '\nWet Solids\n'
-            },
-            {
-                fontSize: 6,
-                text: '\n'
-            },
-            {
-                table: {
-                    widths: ['*'],
-                    heights: 30,
-                    body: [
-                        ['wetsolidtotal']
-                    ]
-                }
-            },
-            {
-                alignment: 'center',
-                style: 'header',
-                text: '\nTotals\n'
-            },
-            {
-                fontSize: 6,
-                text: '\n'
-            },
-            {
-                alignment: 'center',
-                table: {
-                    widths: ['*'],
-                    heights: 30,
-                    body: [
-                        ['totalwithunits']
-                    ]
-                }
-            },
-            {
-                fontSize: 6,
-                text: '\n\n\n'
-            },
-            {
-                table: {
-                    body: [
-                        [
-                            {
-                                fillColor: '#eeeeee',
-                                text: 'By signing below you agree that the above results are accurate and that the waste contains no hazardous materials as defined by the Resource Conservation and Recovery Act'
-                            }
-                        ],
-                        [
-                            {text: [
-                                'DRIVER NAME:                              ',
-                                {text: 'dname'}]
-                            }
-                        ],
-                        [
-                            {text: [
-                                'DRIVER SIGNATURE:                    ',
-                                {text: 'dsig'}]
-                            }
-                        ]
-                    ]
-                }
-            }
-        ],
-        styles: {
-            header: {
-                fontSize: 14,
-                bold: true
-            },
-            bigger: {
-                fontSize: 15,
-                italics: true
-            }
-        },
-        defaultStyle: {
-            columnGap: 20
-        }
-        
-    }
-    
-    var pdfDoc = printer.createPdfKitDocument(docdef);
-    pdfDoc.pipe(fs.createWriteStream('document.pdf'));
-    pdfDoc.end();
 
 	return res.redirect('/pos9.html');  
 });
