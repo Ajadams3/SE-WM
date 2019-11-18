@@ -681,7 +681,7 @@ app.post('/pos8' , function(req,res){
                             },
                             {
                                 table: {
-                                    //widths: ['auto', 400],
+                                    widths: [500],
                                     body: [
                                         [
                                             {
@@ -697,7 +697,7 @@ app.post('/pos8' , function(req,res){
                                         [
                                             //{text:['DRIVER SIGNATURE: ']},
                                             {image:[signature], 
-                                            height: 50,}
+                                            width: 150}
                                         ]
                                     ]
                                 }
