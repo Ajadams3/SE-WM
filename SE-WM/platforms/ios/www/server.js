@@ -696,7 +696,7 @@ app.post('/pos8' , function(req,res){
                                         ],
                                         [
                                             //{text:['DRIVER SIGNATURE: ']},
-                                            {image:[signature], 
+                                            {image:[dsig], 
                                             width: 150}
                                         ]
                                     ]
