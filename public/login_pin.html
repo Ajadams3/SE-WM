@@ -38,7 +38,7 @@ if (pinNumber == correctPinNumber)
 }
 else
 {
-  alert("Incorrect Pin, please try again");
+  alert("Incorrect pin, please try again");
   clearPad()
 }
 //add one more access attempt;
@@ -60,30 +60,28 @@ function message()
 
 <body class="myBody">
   <div class="pin">
-    <div class="myBody">
   <p>
     <input type="text" class="placeholder_pin"name="pinNumber" placeholder="Enter PIN" id="pinNumber" style="width:197px"/>
-    <br />
-    <input type="button" class="numberButtons one"   value="1" onclick="addNumber(this.value)"  />
-    <input type="button" class="numberButtons"  value="2" onclick="addNumber(this.value)" />
-    <input type="button" class="numberButtons"  value="3" onclick="addNumber(this.value)" />
-    <br />
-    <input type="button" class="numberButtons"  value="4" onclick="addNumber(this.value)" />
-    <input type="button" class="numberButtons"  value="5" onclick="addNumber(this.value)" />
-    <input type="button" class="numberButtons"  value="6" onclick="addNumber(this.value)" />
-    <br />
-    <input type="button" class="numberButtons"  value="7" onclick="addNumber(this.value)" />
-    <input type="button" class="numberButtons"  value="8" onclick="addNumber(this.value)" />
-    <input type="button" class="numberButtons"  value="9" onclick="addNumber(this.value)" />
-    <br />
-    <input type="button" class="backspace"  value="⌫" onclick="deleteLastElement()" />
-    <input type="button" class="numberButtons"  value="0" onclick="addNumber(this.value)" />
-    <input type="button" alt="submit" value = "✓" class="checkmark"   onclick="checkPinNumber()" />
+    <br>
+    <input type="button" class="numberButtons one"   value="1" onclick="addNumber(this.value)">
+    <input type="button" class="numberButtons"  value="2" onclick="addNumber(this.value)">
+    <input type="button" class="numberButtons"  value="3" onclick="addNumber(this.value)">
+    <br>
+    <input type="button" class="numberButtons"  value="4" onclick="addNumber(this.value)">
+    <input type="button" class="numberButtons"  value="5" onclick="addNumber(this.value)">
+    <input type="button" class="numberButtons"  value="6" onclick="addNumber(this.value)">
+    <br>
+    <input type="button" class="numberButtons"  value="7" onclick="addNumber(this.value)">
+    <input type="button" class="numberButtons"  value="8" onclick="addNumber(this.value)">
+    <input type="button" class="numberButtons"  value="9" onclick="addNumber(this.value)">
+    <br>
+    <input type="button" class="backspace"  value="⌫" onclick="deleteLastElement()">
+    <input type="button" class="numberButtons"  value="0" onclick="addNumber(this.value)">
+    <input type="button" alt="submit" value = "✓" class="checkmark"   onclick="checkPinNumber()">
   </p>
 
-    <input type="submit" name="pinButton" class="reset_button clearButton" id="pinButton" value="Reset" onclick="clearPad()" style="width:197px" />
+    <input type="submit" name="pinButton" class="reset_button clearButton" id="pinButton" value="Reset" onclick="clearPad()" style="width:197px">
 
-    </div>
   </div>
   <script type="text/javascript">
 	window.onload = function(){

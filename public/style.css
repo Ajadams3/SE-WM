@@ -129,7 +129,10 @@ body.myBody {
 
 .centerButtonsEditClient{
   text-align: center;
-  display: block;
+  display: inline-block;
+  border-radius: 5px;
+
+
 }
 
 .wrapMain {

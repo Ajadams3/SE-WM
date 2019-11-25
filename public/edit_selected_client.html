@@ -28,6 +28,9 @@
 	       }
 
          function resetFields() {
+
+         	var answer = window.confirm("Undo changes?");
+          if (answer) {
            document.getElementById("company").value = "<%= client_info.rows[0].company %>";
            document.getElementById("name").value = "<%= client_info.rows[0].name %>";
            document.getElementById("email").value = "<%= client_info.rows[0].email %>";
@@ -55,6 +58,9 @@
            {
              document.getElementById("toggle").checked = false;
            }
+
+       }
+       		else{}
 
 
 
@@ -213,7 +219,6 @@
 	  border-radius: 50%;
 	  }
 	  .toggleBox{
-	    float: left;
 	  }
 	  input:-webkit-autofill,
 	  input:-webkit-autofill:hover,
@@ -310,12 +315,12 @@
 	</style>
 </head>
 <body>
-	<form  autocomplete="off" class="add_client-style" method='post'>
+	<form  autocomplete="off" class="add_client-style" id="updateClient" name="updateClient" method='post'>
 		<br>
 
         <p id="add_client_title">Edit Client</p>
 		<ul>
-		
+
 			<li>
 				<p class="text">Company Name</p>
         <input class="field-style field-full align-none" id="company" name="company" value="<%= client_info.rows[0].company %>" type="text">
@@ -359,18 +364,20 @@
         <br>
 				<p class="text">Start Date</p>
         <input class="field-style field-full align-none" id="startDate" name="startDate" type="text">
-			</li>
+			</li><br>
 
 			<li class="toggleBox">Active Status &nbsp;
 				<label class="switch"><input id="toggle" name="toggle" onclick="myToggleFunction()" type="checkbox"> <span class="slider round"></span></label>
 			</li>
-			<li class="centerButtonsEditClient"><br>
-			<br>
-			<br>
+			<li class="centerButtonsEditClient">
 
-			<input style="width:110px" type="submit" formaction="/update_client"value="Save"> <input style="width:110px" type="button" onclick="resetFields()" value="Undo"> <input style="width:110px" type="button" value="Cancel"></li>
+
+
+			<input style="width:110px" type="button" onclick="areYouSure()"value="Save"> <input style="width:110px" type="button" onclick="resetFields()" value="Undo"> <input style="width:110px" type="button" value="Cancel" onclick="areYouSureCancel()"></li>
 		</ul>
+
 	</form>
+
 </div>
 
 <script>
@@ -408,6 +415,36 @@
         document.body.appendChild(form);
         form.submit();
   }
+
+  function areYouSure()
+        {
+          var answer = window.confirm("Update " + document.getElementById("company").value + "?");
+          if (answer) {
+            alert(document.getElementById("company").value + " updated!");
+            document.getElementById('updateClient').action = './update_client'; //Will set it
+
+
+            document.getElementById("updateClient").submit();
+          }
+          else {
+
+            //document.getElementById('addClient').action = ; //Will set it
+          }
+
+        }
+
+   function areYouSureCancel()
+        {
+          var answer = window.confirm("Cancel update?");
+          if (answer) {
+            location.href='pos.html';
+          }
+          else {
+
+            //document.getElementById('addClient').action = ; //Will set it
+          }
+
+        }
 
 
   function autocomplete(inp, arr) {
@@ -519,7 +556,7 @@
     document.getElementById("toggle").checked = true;
   }
 
-  
+
 
 </script>
 </body>

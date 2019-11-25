@@ -251,7 +251,6 @@ app.post('/login', function(req, res) {
     var company_name = req.body.key;
 
     var selectedCompany = company_name[0];
-    console.log(selectedCompany);
 
     client = new Client({
         user:config.db.user,
@@ -277,7 +276,8 @@ app.post('/login', function(req, res) {
               client.end();
               }
 
-        
+
+
 
         return res.render("edit_selected_client.html",{client_info: compResults});
 
@@ -365,7 +365,7 @@ app.post('/update_client', function(req, res) {
 
 
 
-        client.query("SELECT *  FROM client_table", function(err, results) {
+        client.query("SELECT * FROM client_table ORDER BY company", function(err, results) {
           if (err)
           {
               console.log(err);
@@ -375,7 +375,13 @@ app.post('/update_client', function(req, res) {
               client.end();
               }
 
-              //console.log(results);
+               //results.sort();
+               //var myarray=["Bob", "Bully", "Amy"];
+               //results.rows.company.sort();
+               //results.sortBy('company');
+                //Array now becomes ["Amy", "Bob", "Bully"]
+
+              //console.log(myarray);
 
         return res.render("view_clients.html",{results: results});
 

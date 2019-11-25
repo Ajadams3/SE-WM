@@ -5,6 +5,18 @@
 	<title>Edit Client</title>
 	<link href="style.css" rel="stylesheet" type="text/css">
 	<script>
+
+	var size = <%= results.rows.length %>;
+	<% var clickedArr = new Array(); %>
+
+<% for(var i=0; i<results.rows.length; i++) { %>
+
+		<% clickedArr.push({ index: i, name: results.rows[i].company }); %>
+<%	} %>
+
+
+
+
 function myFunction() {
   // Declare variables
   var input, filter, table, tr, td, i, txtValue;
@@ -14,6 +26,8 @@ function myFunction() {
   tr = table.getElementsByTagName("tr");
 
   // Loop through all table rows, and hide those who don't match the search query
+
+
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[0];
     if (td) {
@@ -28,14 +42,77 @@ function myFunction() {
 }
 
 function submitForm(comp){
-
 document.getElementById("key").value = comp;
 document.getElementById("editSelectedForm").submit();
 
 }
+
+function addField(comp, email, startDate, nThis, size){
+	//var clickedArr[size];
+	//var index = nThis.parentNode.parentNode.rowIndex
+	var table = document.getElementById("myTable");
+	alert(<%=clickedArr[0].name%>);
+
+/*
+	if(clickedArr[index - 1]==0)
+	{ // Will alert the actual element clicked.
+//	alert(event.target.id); // Will alert the actual element clicked.
+  var row = table.insertRow(index+1);
+  var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var splitDate = startDate;
+	var fields = splitDate.split('00:00');
+	var d = fields[0];
+
+  cell1.innerHTML = comp + "<br>" +"E: " + email + "<br>" + "Start Date: " + d;
+
+	var button = document.createElement("button");
+	button.class= "removeBtn";
+  button.innerHTML = "Remove";
+	button.style = "background-color: red;font: 14px sans-serif,Arial, Helvetica; border-radius: 4px; color: #FFFFFF;padding: 5px 7px;";
+
+
+	button.onclick = function() { // Note this is a function
+  alert("blabla");
+  };
+
+	cell2.appendChild(button);
+	clickedArr[index - 1] = 1;
+	//button.onclick = removeFunction();
+	}
+	else if(clickedArr[index-1] == 1) {
+
+	clickedArr[index - 1] = 0;
+	document.getElementById("myTable").deleteRow(index + 1);
+	}
+  	//document.getElementById("myTable").deleteRow(index);
+		//row.deleteCell(0);
+  //}
+
+
+}
+*/
+}
+
+
+function areYouSureReturn(){
+	var answer = window.confirm("Return home?");
+          if (answer) {
+            location.href='pos.html';
+          }
+          else {
+
+            //document.getElementById('addClient').action = ; //Will set it
+          }
+}
 </script>
 	<style>
-		#myInput {
+
+	.removeBtn{
+		font: 18px sans-serif,Arial, Helvetica;
+
+	}
+	#myInput {
   width: 97.2%; /* Full-width */
   font-size: 16px; /* Increase font-size */
   padding: 12px 20px 12px 12px; /* Add some padding */
@@ -47,7 +124,9 @@ document.getElementById("editSelectedForm").submit();
   border-collapse: collapse; /*Collapse borders */
   width: 100%; /* Full-width */
   border: 1px solid #ddd; /* Add a grey border */
-  font-size: 18px; /* Increase font-size */
+  font-size: 17px; /* Increase font-size */
+	background-color: #EBF4FA;
+
 }
 
 #myTable th, #myTable td {
@@ -61,12 +140,12 @@ document.getElementById("editSelectedForm").submit();
 }
 
 #myTable tr.header, #myTable tr:hover {
-  /* Add a grey background color to the table header and on hover */
-  background-color: #f1f1f1;
+  /* Add a grey background color to the table header and on hover
+  background-color: #f1f1f1; */
 }
 	  .add_client-style{
 	  max-width: 1200px;
-	  max-height: 900px;
+	  max-height: none;
 	  background: #FAFAFA;
 	  padding: 30px;
 	  padding-top: 4px;
@@ -242,7 +321,6 @@ document.getElementById("editSelectedForm").submit();
 	 right: 0;
 	 font-size: 80%;
 	 width: 418px;
-
 	}
 
 	.autocomplete-items div {
@@ -300,64 +378,108 @@ document.getElementById("editSelectedForm").submit();
     color: #FFFFFF;
     padding: 5px 7px;
     text-decoration: none;
-    font: 18px sans-serif,Arial, Helvetica;
     text-align: center;
+		border-radius: 4px;
+
   }
 
+	.addButtonView{
+    cursor: pointer;
+    color: #FFFFFF;
+    padding:7px;
+
+		margin-top: 10px;
+		margin-bottom: 10px;
+    text-decoration: none;
+    text-align: center;
+		background: url(/images/addButton.png);
+		background-position: center center;
+    background-repeat: no-repeat;
+	  background-size: 100%;
+		height: 45px;
+		border-radius: 50%;
+
+	}
+
   .moreButtonView{
-    background-color: #4CAF50;
+    background-color: #4166f5;
     cursor: pointer;
     color: #FFFFFF;
     padding: 5px 7px;
     text-decoration: none;
-    font: 18px sans-serif,Arial, Helvetica;
     text-align: center;
+		border-radius: 4px;
   }
 
   .pInline{
   display:inline-block;
   }
 
-  .viewClientButtons{
-   
+  .returnButtonView{
+    background-color: #4CAF50;
+    cursor: pointer;
+    color: #FFFFFF;
+    padding: 7px 9px;
+    margin-top: 25px;
+    text-decoration: none;
+    text-align: center;
+		border-radius: 4px;
+
+
   }
 
   .keyInput{
     display:none;
   }
-  
+
 	</style>
 
 </head>
+
 <body>
-	<form action='/get_edit_client' id="editSelectedForm" name="editSelectedForm" autocomplete="off" class="add_client-style" method='post'>
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for companies..">
+    <form action='/get_edit_client' id="editSelectedForm" name="editSelectedForm" autocomplete="off" class="add_client-style" method='post'>
+			<input style="width:45px" class="addButtonView" type="button" onclick="location.href='add_client.html';" value="">
 
-<table id="myTable">
-  <tr class="header">
-    <th style="width:32%;">Company Name</th>
-    <th style="width:20%;">Phone</th>
-    <th style="width:40%;">Email</th>
-    <th></th><th></th>
-  </tr>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for companies..">
 
-  <% for(var i=0; i<results.rows.length; i++) { %>
-  <tr>
-    <td><%= results.rows[i].company %></td>
-    <td><%= results.rows[i].phone %></td>
-    <td><%= results.rows[i].email %></td>
-    <div class="viewClientButtons">
-    <td class="tdInline"><input style="width:90px" class="editButtonView" type="button" onclick="submitForm('<%= results.rows[i].company %>')" value="Edit"></td>
-    <input class="keyInput" id="key" name="key" value="" type="text">
-    
-    <td class="tdInline"><input style="width:90px" class="moreButtonView" type="button" value="More"></td>
+        <table id="myTable">
+            <tr class="header">
+                <th style="width:32%;">Company Name</th>
+                <th style="width:15%;">Phone</th>
+                <th style="width:40%;">Email</th>
+                <th></th>
+                <th></th>
+            </tr>
 
-</div>
-  </tr>
-  <% } %>
-  </table>
+            <% for(var i=0; i<results.rows.length; i++) { %>
+                <tr>
+                    <td class="tdClass">
+                        <%= results.rows[i].company %>
+                    </td>
+                    <td>
+                        <%= results.rows[i].phone %>
+                    </td>
+                    <td>
+                        <%= results.rows[i].email %>
+                    </td>
+                    <div class="viewClientButtons">
+                        <td class="tdInline">
+                            <input style="width:90px" class="editButtonView" type="button" onclick="submitForm('<%= results.rows[i].company %>')" value="Edit">
+                        </td>
+                        <input class="keyInput" id="key" name="key" value="" type="text">
 
-	</form>
+                        <td class="tdInline">
+                            <input style="width:90px" class="moreButtonView" onclick="addField('<%= results.rows[i].company %>', '<%= results.rows[i].email %>', '<%= results.rows[i].start_date %>', this,'<%= results.rows.length %>')" id="moreButton" name="moreButton" type="button" value="More">
+                        </td>
+
+                    </div>
+                </tr>
+                <% } %>
+        </table>
+        <input type="button" value="Return" style="width:100px" class="returnButtonView" onclick="areYouSureReturn()">
+
+    </form>
 
 </body>
+
 </html>
