@@ -20,7 +20,6 @@
     "pg": "^7.12.1",
     "sequelize": "^5.19.0",
     "sequelize-cli": "^5.5.1",
-    "gulp":"4.0.2",
-    "@material-design": "4.1.1"
+    "gulp":"4.0.2"
   }
 }
