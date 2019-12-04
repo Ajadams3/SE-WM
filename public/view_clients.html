@@ -63,26 +63,6 @@ function addField(comp, email, startDate, nThis, size) {
   var button = document.createElement("button");
   button.class = "removeBtn";
   button.innerHTML = "Remove";
-<<<<<<< HEAD
-	button.style = "background-color: red;font: 14px sans-serif,Arial, Helvetica; border-radius: 4px; color: #FFFFFF;padding: 5px 7px;";
-	button.onclick = function() {
-
-	var answer = window.confirm("Are you sure you want to delete " + comp + " as a client?");
-
-	if (answer)
-	{
-	location.href='Dashboard.html';
-	document.getElementById("key").value = comp;
-        document.getElementById('client').action = './delete_client'; //Will set it
-        document.getElementById("client").submit();
-	}
-
-	else
-	{
-          document.getElementById('client').action = './view_clients'; //Will set it
-	  document.getElementById("client").submit();
-	}
-=======
   button.style = "background-color: red;font: 14px sans-serif,Arial, Helvetica; border-radius: 4px; color: #FFFFFF;padding: 5px 7px;";
   button.onclick = function() {
 
@@ -97,7 +77,6 @@ function addField(comp, email, startDate, nThis, size) {
     document.getElementById('client').action = './view_clients'; //Will set it
     document.getElementById("client").submit();
    }
->>>>>>> master
   };
 
   cell2.appendChild(button);
@@ -109,21 +88,12 @@ function addField(comp, email, startDate, nThis, size) {
  }
 }
 
-<<<<<<< HEAD
-function areYouSureReturn(){
-	var answer = window.confirm("Return home?");
-          if (answer) {
-            location.href='Dashboard.html';
-          }
-          else {}
-=======
 // function that promts user if user wants to return home or not
 function areYouSureReturn() {
  var answer = window.confirm("Return home?");
  if (answer) {
   location.href = 'pos.html';
  } else {}
->>>>>>> master
 }
 </script>
 
