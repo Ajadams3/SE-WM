@@ -67,7 +67,7 @@ function addField(comp, email, startDate, nThis, size){
 
 	if (answer)
 	{
-	location.href='pos.html';
+	location.href='Dashboard.html';
 	document.getElementById("key").value = comp;
         document.getElementById('client').action = './delete_client'; //Will set it
         document.getElementById("client").submit();
@@ -93,7 +93,7 @@ function addField(comp, email, startDate, nThis, size){
 function areYouSureReturn(){
 	var answer = window.confirm("Return home?");
           if (answer) {
-            location.href='pos.html';
+            location.href='Dashboard.html';
           }
           else {}
 }

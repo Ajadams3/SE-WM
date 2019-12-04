@@ -172,7 +172,7 @@ addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_i
  res.set({
    'Access-Control-Allow-Origin' : '*'
  });
- return res.redirect('pos.html');
+ return res.redirect('Dashboard.html');
 });
 
 app.post('/pre_login', function(req, res) {
@@ -428,7 +428,7 @@ app.post('/update_client', function(req, res) {
      }
  })
 
-     return res.render("pos.html");
+     return res.render("Dashboard.html");
  });
 
  app.post('/view_clients', function(req, res) {
