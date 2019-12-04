@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 //var DATABASE_URL=$(heroku config:get DATABASE_URL -a dataflow-project) node
 
 //enabling css style sheet
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname,'/public'));
 app.set('views', __dirname + '/public');
 
 var configs = {
