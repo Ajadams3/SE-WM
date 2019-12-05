@@ -72,8 +72,8 @@
             function getCompanies() {
                 $.ajax({
                     type: 'GET',
-                    url: 'http://localhost:3000/ajax_get_gas_comp',
-                  //url: 'https://silver-fox-1.herokuapp.com/ajax_get_gas_comp',
+                    //url: 'http://localhost:3000/ajax_get_gas_comp',
+                    url: 'https://silver-fox-1.herokuapp.com/ajax_get_gas_comp',
 
                     dataType: 'json',
                     async:  false
@@ -102,10 +102,10 @@
                 document.getElementById('text').addEventListener('keyup', changeButtons);
             }
 
-<<<<<<< HEAD
-=======
+//<<<<<<< HEAD
+//=======
 
->>>>>>> master
+//>>>>>>> master
             function changeButtons() {
                 /*NEXT STEPS: clean this function! looks like loop part could use another function*/
                 var txt = document.getElementById('text').value;
