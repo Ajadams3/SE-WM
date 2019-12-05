@@ -16,14 +16,11 @@
   // gets the clients for the client dashboard selection
   function getClients()
   {
-    let form = document.createElement('form');
-    form.action = '/view_clients';
-    form.method = 'POST';
 
-    // the form must be in the document to submit it
-    document.body.append(form);
+    alert("hwllo");
+    document.getElementById('getClients').action = './view_clients'; //Will set it
 
-    form.submit();
+    document.getElementById("getClients").submit();
     }
 
   </script>
@@ -37,7 +34,7 @@
           Green-Leaf
         </a>
       </div>
-      <form action='' method='post'>
+      <form action='' method='post' id="getClients">
       <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="nav-item active  ">
