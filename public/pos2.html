@@ -72,7 +72,8 @@
             function getCompanies() {
                 $.ajax({
                     type: 'GET',
-                    url: 'http://localhost:3000/ajax_get_truck_comp',
+                    //url: 'http://localhost:3000/ajax_get_truck_comp',
+                    url: 'https://silver-fox-1.herokuapp.com/ajax_get_gas_comp',
                     dataType: 'json',
                     async:  false
                 })
@@ -120,7 +121,7 @@
                         }
                     }
                 } else {
-                    for (i; i<buttonSize; i++) 
+                    for (i; i<buttonSize; i++)
                     {
                         var num = 'option' + i.toString();
                         document.getElementById(num).style.display = 'inline-block';
@@ -151,7 +152,7 @@
                     else unSelected = unSelected + 1;
                 }
                 document.getElementById('testing').innerHTML= unSelected;
-                if (unSelected == (buttonSize-1)) 
+                if (unSelected == (buttonSize-1))
                 {
                     /*alert is a placeholder for future pop-up that will be more noticable
                     idea - include company logos in addition to titles because workers may recognize better*/
