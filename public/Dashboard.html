@@ -12,10 +12,20 @@
   <link href="assets/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
 
   <script>
+
+  // gets the clients for the client dashboard selection
   function getClients()
   {
-    alert("hello");
-  }
+    let form = document.createElement('form');
+    form.action = '/view_clients';
+    form.method = 'POST';
+
+    // the form must be in the document to submit it
+    document.body.append(form);
+
+    form.submit();
+    }
+
   </script>
 </head>
 
