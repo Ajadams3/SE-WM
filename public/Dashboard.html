@@ -19,6 +19,16 @@
     document.getElementById('getClients').action = './view_clients'; //Will set it
     document.getElementById("getClients").submit();
     }
+    function getTrucks()
+  {
+    document.getElementById('getClients').action = './Truck_table'; //Will set it
+    document.getElementById("getClients").submit();
+    }
+    function getTickets()
+  {
+    document.getElementById('getClients').action = './Ticket_table'; //Will set it
+    document.getElementById("getClients").submit();
+    }
 
   </script>
 </head>
@@ -54,13 +64,13 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" onclick='getClients()'>
+            <a class="nav-link" onclick='getTickets()'>
               <i class="material-icons">library_books</i>
               <p>Tickets</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" onclick='getClients()'>
+            <a class="nav-link" onclick='getTrucks()'>
               <i class="material-icons">local_shipping</i>
               <p>Trucking Companies</p>
             </a>
