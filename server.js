@@ -177,14 +177,10 @@ addressOne_input, addressTwo_input, city_input, state_input, zip_input, county_i
 });
 
 app.post('/pre_login', function(req, res) {
-
-
      return res.render("login.html",{success: 'none'});
-
  });
 
 app.post('/get_clients', function(req, res) {
-
  client = new Client({
      user:config.db.user,
      host:config.db.host,
@@ -207,14 +203,11 @@ app.post('/get_clients', function(req, res) {
          console.log("Success! Client sent!");
          client.end();
          }
-
      return res.render("edit_client.html",{names: results});
-
  });
 });
 
 app.post('/login', function(req, res) {
-
  client = new Client({
      user:config.db.user,
      host:config.db.host,
@@ -223,7 +216,6 @@ app.post('/login', function(req, res) {
      port:config.db.port,
      ssl:config.db.ssl
    })
-
    client.connect()
    client.query("SELECT email, password, pin, access_rights, name FROM login_table", function(err, results) {
      if (err)
@@ -305,7 +297,6 @@ app.post('/login', function(req, res) {
      const getClient = 'SELECT *  FROM client_table WHERE company = $1'
 
      client.query(getClient, [selectedCompany], function(err,compResults){
-
        if (err)
          {
              console.log(err);
@@ -314,18 +305,13 @@ app.post('/login', function(req, res) {
          else{
              client.end();
              }
-
        return res.render("edit_selected_client.html",{client_info: compResults});
-
    });
  });
 
  app.post('/delete_client', function(req, res) {
-
    var company_name = req.body.key;
-
    var selectedCompany = company_name[0];
-
    client = new Client({
        user:config.db.user,
        host:config.db.host,
@@ -340,17 +326,13 @@ app.post('/login', function(req, res) {
      const deleteClient = 'DELETE FROM client_table WHERE company = $1'
 
      client.query(deleteClient, [selectedCompany], function(err,compResults){
-
        if (err)
          {
              console.log(err);
              client.end();
          }
-
          else{}
-
            client.query("SELECT * FROM client_table ORDER BY company", function(err, results) {
-
              if (err)
                {
                   console.log(err);
@@ -360,9 +342,7 @@ app.post('/login', function(req, res) {
                {
                    client.end();
                }
-
                return res.render("view_clients.html",{results: results});
-
              });
         });
  });
