@@ -1110,7 +1110,7 @@ app.post('/pos8' , function(req,res){
                     // email with attachment
                     var mailOptions = {
                         from: 'Paul.Rhett.WasteManagement@gmail.com',
-                        to: 'gainesandrew@live.com',
+                        to: 'vlriggs@mavs.coloradomesa.edu',
                         subject: 'Greenleaf Ticket',
                         text: 'Here is a copy of the ticket to keep for your records.',
                         attachments: {
