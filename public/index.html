@@ -8,15 +8,35 @@
      <meta charset="UTF-8">
      <link rel="stylesheet" type="text/css" href="style.css">
      <title> main page </title>
-     <h1 style=text-align:center>GREEN LEAF</h1>
-     <h3 style=text-align:center>Enviromental Services</H3>
+
+     <style>
+
+     body {
+           background-image: url("/images/GreenLeaf.jpg");
+           background-attachment:fixed;
+           background-position: center top;
+           background-repeat: no-repeat;
+           background-size: 93%;
+          }
+
+    .loginBtn{
+              position: absolute;
+              bottom: 300px;
+              left: 50%;
+              width: 50px;
+              margin-left: -25px;
+            }
+
+     </style>
 </head>
 
 <body class="myBody">
   <div class="wrapMain">
     <div class="main_page">
       <form action='/pre_login' class="add_client-style" method='post'>
-       <input type="submit" id="submitDetails"  name="submitDetails" value="Login" /><br>
+        <div class="loginBtn">
+          <input type="submit" id="submitDetails"  name="submitDetails" value="Login" /><br>
+      </div>
    </div>
   </div>
       </form>

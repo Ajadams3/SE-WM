@@ -40,12 +40,12 @@
                 <!-- display all ticket information so far-->
                 <h3 style='text-align:center;'>Review</h3>
                 <p style='font-size: 26px'>
-                    Gas company: <b><span id='gasCo'></span></b><br> 
-                    Trucking company: <b><span id='truckCo'></span></b><br> 
-                    Driver Name: <b><span id='Dname'></span></b><br> 
-                    Truck Number: <b><span id='TruckNum'></span></b><br> 
-                    Trailer Number: <b><span id='TrailerNum'></span></b><br> 
-                    Location/Well: <b><span id='Loc'></span></b><br> 
+                    Gas company: <b><span id='gasCo'></span></b><br>
+                    Trucking company: <b><span id='truckCo'></span></b><br>
+                    Driver Name: <b><span id='Dname'></span></b><br>
+                    Truck Number: <b><span id='TruckNum'></span></b><br>
+                    Trailer Number: <b><span id='TrailerNum'></span></b><br>
+                    Location/Well: <b><span id='Loc'></span></b><br>
                     Materials: <b><span id='Mat'></span></b><br>
                 </p>
             </div>
@@ -63,11 +63,12 @@
             function getTicket() {
                 $.ajax({
                     type: 'GET',
-                    url: 'https://silver-fox-1.herokuapp.com/ajax_get_ticket',
+                    url: 'http://localhost:3000/ajax_get_truck_comp',
+                    //url: 'https://silver-fox-1.herokuapp.com/ajax_get_ticket',
                     dataType: 'json',
                     async:  false
                 })
-                
+
                 // display the information
                 .done(function(result) {
                     document.getElementById('gasCo').innerHTML = result.rows[0].gas_company;
