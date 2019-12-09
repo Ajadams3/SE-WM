@@ -409,7 +409,7 @@ app.post('/update_client', function(req, res) {
      }
  })
 
-     return res.render("pos.html");
+     return res.render("Dashboard.html");
  });
 
  app.post('/view_clients', function(req, res) {
